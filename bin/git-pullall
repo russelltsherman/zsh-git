@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+__git_pullall() {
+    find "${1:-$(pwd)}" -name .git -type d -prune -exec sh -c '
+        cd $1/.. && echo "Updating $(pwd)" && git pull --rebase
+    ' _ {} \;
+}
+
+__git_pullall "$@"

@@ -1,0 +1,13 @@
+#!/bin/bash
+# shellcheck disable=SC1090
+source "$(dirname "$0")/../git.plugin.zsh"
+
+__git_delete_local_merged() {
+  # shellcheck disable=SC2039
+  local branches
+  __git_log "Removing merged branches..."
+  branches="$(git branch --merged | grep -v "^\*" | grep -v 'master' | tr -d '\n')"
+  [ ! -z "$branches" ] && echo "$branches" | xargs git branch -d
+}
+
+__git_delete_local_merged "$@"

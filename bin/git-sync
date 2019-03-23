@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
+source "$(dirname "$0")/../git.plugin.zsh"
+
+__git_sync() {
+  # shellcheck disable=SC2039
+  local branch remote
+  branch=$(git symbolic-ref --short HEAD)
+  remote=$(git remote | grep upstream || echo "origin")
+  __git_prune "$remote"
+  __git_merge_locally "$remote" "$branch"
+  __git_push_to_fork "$remote" "$branch"
+  git branch -u "$remote/$branch"
+  git-delete-local-merged
+  __git_log "All done!"
+}
+
+__git_sync "$@"
