@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# find script location
+LOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$LOC/.."
+
+# for each directory in parent not listed in excludes file
+for directory in $(find $DIR -type d \( $(printf -- "!  -name %s " $(cat "$LOC/dirs.exclude")) \) -maxdepth 1 -print | sort)
+do
+  dirname="$(basename "$directory")"
+  (
+    cd $directory
+    echo "$dirname"
+    if [ -d ".git" ]
+    then
+      git fetch
+      branch=$(git branch | grep \* | cut -d ' ' -f2)
+      B_L=feature_branch
+      B_R=origin/feature_branch
+
+      if [ ! x"$(git rev-parse "$branch")" = x"$(git rev-parse  "origin/$branch")" ]
+      then
+        echo " -- needs udpate"
+      fi
+    fi    
+  )
+done

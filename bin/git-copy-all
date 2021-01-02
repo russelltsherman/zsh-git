@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+
+# find script location
+LOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$LOC/.."
+
+# file=.github/workflows/auto-readme.yml
+file=.github/PULL_REQUEST_TEMPLATE.md
+
+src="$DIR/$file"
+cat $src
+
+# for each directory in parent not listed in excludes file
+for directory in $(find $DIR -type d \( $(printf -- "!  -name %s " $(cat "$LOC/dirs.exclude")) \) -maxdepth 1 -print | sort)
+do
+  dirname="$(basename "$directory")"
+  echo $dirname
+
+  (
+    cd $directory
+    echo "cp $src $file"
+    cp "$src" "$file"
+  )
+done
