@@ -18,8 +18,6 @@ __git_ident() {
     echo "$dir"
     (
         cd "$dir" || exit
-        echo "$dir"
-
         if [[ -d .git ]] # has a .git directory
         then
         # /Users/russellsherman/src/github.com/russelltsherman/shell-ci-build
@@ -39,7 +37,7 @@ __git_ident() {
             git remote add origin "git@${subdomain}.${provider}:${org}/${repo}.git"
         fi
         else
-        echo "is not a git repository"
+            echo "is not a git repository"
         fi
     )
     done <   <(find "$path" -type d -maxdepth 1 -not -path ".")
